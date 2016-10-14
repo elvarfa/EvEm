@@ -7,9 +7,6 @@ class Memory
     public:
         Memory();
         virtual ~Memory();
-
-        Read();
-        Write();
     private:
 
 };
