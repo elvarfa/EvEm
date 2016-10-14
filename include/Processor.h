@@ -13,9 +13,9 @@ public:
     Processor(Memory* pMemory);
     ~Processor();
 
-    /*
-    /   Instruction Sets
-    */
+/*
+/   Instruction Sets
+*/
 
     /*
     /   8 and 16-bit Loads
@@ -34,18 +34,18 @@ public:
         /   Direct loading of registers
         */
 
-        DirectLoadA(uint16_t);                              //Loads from memory location ($uint16_t) into register A.
-        DirectLoadXY(Register X, Register Y, uint16_t);     //Loads from memory locations ($uint16_t) and
+        DirectLoadA(uint16_t n);                              //Loads from memory location ($uint16_t) into register A.
+        DirectLoadXY(Register X, Register Y, uint16_t n);     //Loads from memory locations ($uint16_t) and
                                                             //($uint16_t+4) into registers X and Y.
-        DirectLoadSP(uint16_t);                             //Loads from memory location ($uint16_t) into Stack Pointer.
+        DirectLoadSP(uint16_t n);                             //Loads from memory location ($uint16_t) into Stack Pointer.
 
         /*
         /   Immediate loading of registers
         /   Can be used to load any specific register or register pair with a specific fixed value.
         */
 
-        ImmediateLoadX(Register X, uint8_t);                //Loads register X with the value $uint8_t.
-        ImmediateLoadXY(Register X, Register Y, uint16_t);  //Loads registers X and Y with the value $uint16_t.
+        ImmediateLoadX(Register X, uint8_t n);                //Loads register X with the value $uint8_t.
+        ImmediateLoadXY(Register X, Register Y, uint16_t n);  //Loads registers X and Y with the value $uint16_t.
 
         /*
         /   Stack loading of registers
@@ -53,7 +53,23 @@ public:
 
         PopXY(Register X, Register Y);
 
+        /*
+        /   Storing registers in memory
+        */
 
+        StoreXInMemory(Memory Loc, Register X);     //Loads the contents of register X into memory location ($Loc).
+        StoreAInMemory(Memory Loc);                 //Loads the contents of register A into memory location ($Loc).
+        StoreXAtHL(Register X);                     //Loads the contents of register X into memory location (HL).
+        StoreAAtHL();                               //Loads the contents of register A into memory location (HL).
+        StoreValueAtHL(uint8_t n);                  //Loads the value n into memory location (HL).
+
+    /*
+    /   8-bit Arithmetic and Logical Instructions
+    */
+
+        /*
+        /
+        */
 
 
 
