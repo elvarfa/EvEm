@@ -10,3 +10,9 @@ Processor::~Processor()
 {
 
 }
+
+void Processor::8Bit_Add(Register B){
+    this->A += B; //Addition
+    this->F = 0;
+
+}
