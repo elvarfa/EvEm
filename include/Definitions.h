@@ -28,17 +28,6 @@
 #define InitPointer(pointer) ((pointer) = NULL)
 #define IsValidPointer(pointer) ((pointer) != NULL)
 
-typedef uint8_t u8;
-typedef int8_t s8;
-typedef uint16_t u16;
-typedef int16_t s16;
-typedef uint32_t u32;
-typedef int32_t s32;
-typedef uint64_t u64;
-typedef int64_t s64;
-
-typedef void (*RamChangedCallback) (void);
-
 #define FLAG_ZERO 0x80
 #define FLAG_SUB 0x40
 #define FLAG_HALF 0x20
@@ -47,14 +36,6 @@ typedef void (*RamChangedCallback) (void);
 
 #define GAMEBOY_WIDTH 160
 #define GAMEBOY_HEIGHT 144
-
-struct GB_Color
-{
-    u8 red;
-    u8 green;
-    u8 blue;
-    u8 alpha;
-};
 
 enum Gameboy_Keys
 {
@@ -86,21 +67,6 @@ inline void Log_func(const char* const msg, ...)
     printf("%d: %s\n", count, szBuf);
 
     count++;
-}
-
-inline u8 SetBit(const u8 value, const u8 bit)
-{
-    return value | (0x01 << bit);
-}
-
-inline u8 UnsetBit(const u8 value, const u8 bit)
-{
-    return value & (~(0x01 << bit));
-}
-
-inline bool IsSetBit(const u8 value, const u8 bit)
-{
-    return (value & (0x01 << bit)) != 0;
 }
 
 #endif // DEFINITIONS_H
