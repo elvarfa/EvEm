@@ -16,14 +16,23 @@ public:
     Increment(Register A);
     Decrement(Register A);
     Load(Register A, Register B);
-    Add(Register A, Register B);
-    Subtract(Register A, Register B);
+    8Bit_Add(Register B);
+    8Bit_Add_Mem();
+    8Bit_Add_unsigned(uint8_t n);
+    8Bit_Add_signed(int8_t n);
+    16Bit_Add(Register A, Register B);
+    16Bit_Add_SP();
+    8Bit_Sub(Register B);
+    8Bit_Sub_Mem();
+    8Bit_Sub_unsigned(uint8_t n);
     Compare(Register A, Register B);
     RotateLeft(Register A);
     RotateRight(Register A);
     ShiftLeft(Register A);
+    ShiftLeft_HL();
     ShiftRight(Register A);
-    Complement(Register) A; //Logical NOT
+    ShiftRight_HL();
+    Complement(Register A); //Logical NOT
     OR(Register A, Register B);
     AND(Register A, Register B);
     XOR(Register A, Register B);
