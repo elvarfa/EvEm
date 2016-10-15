@@ -35,8 +35,8 @@ public:
         /   Direct loading of registers
         */
 
-        void DirectLoad(uint16_t n);                               //Loads from memory location ($uint16_t) into register A.
-        void DirectLoad(Register X, Register Y, uint16_t n);      //Loads from memory locations ($uint16_t) and
+        void DirectLoad(uint16_t n);                                //Loads from memory location ($uint16_t) into register A.
+        void DirectLoad(Register X, Register Y, uint16_t n);        //Loads from memory locations ($uint16_t) and
                                                                     //($uint16_t+4) into registers X and Y.
         void DirectLoadSP(uint16_t n);                              //Loads from memory location ($uint16_t) into Stack Pointer.
 
@@ -45,8 +45,8 @@ public:
         /   Can be used to load any specific register or register pair with a specific fixed value.
         */
 
-        void ImmediateLoad(Register X, uint8_t n);                 //Loads register X with the value $uint8_t.
-        void ImmediateLoad(Register X, Register Y, uint16_t n);   //Loads registers X and Y with the value $uint16_t.
+        void ImmediateLoad(Register X, uint8_t n);                  //Loads register X with the value $uint8_t.
+        void ImmediateLoad(Register X, Register Y, uint16_t n);     //Loads registers X and Y with the value $uint16_t.
 
         /*
         /   Stack loading of registers
@@ -203,7 +203,6 @@ public:
 
 
     Compare(Register A, Register B);
-    Complement(Register A); //Logical NOT
     Push(Register SP);
     Pop(Register SP);
     ClearCarryFlag(Register F);
