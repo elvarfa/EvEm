@@ -25,77 +25,184 @@ public:
         /   Register to register
         */
 
-        LoadFromA(Register X);                              //Loads the contents of register A into register X.
-        LoadToA(Register X);                                //Loads the contents of register X into register A.
-        LoadFromMem();                                      //Loads the contents of memory address (HL) into register A.
-        LoadToMem();                                        //Loads the contents of register A into memory address (HL).
+        void LoadFrom(Register X);                              //Loads the contents of register A into register X.
+        void LoadFrom();                                        //Loads the contents of memory address (HL) into register A.
+
+        void LoadTo(Register X);                                //Loads the contents of register X into register A.
+        void LoadTo();                                          //Loads the contents of register A into memory address (HL).
 
         /*
         /   Direct loading of registers
         */
 
-        DirectLoadA(uint16_t n);                              //Loads from memory location ($uint16_t) into register A.
-        DirectLoadXY(Register X, Register Y, uint16_t n);     //Loads from memory locations ($uint16_t) and
-                                                            //($uint16_t+4) into registers X and Y.
-        DirectLoadSP(uint16_t n);                             //Loads from memory location ($uint16_t) into Stack Pointer.
+        void DirectLoad(uint16_t n);                                //Loads from memory location ($uint16_t) into register A.
+        void DirectLoad(Register X, Register Y, uint16_t n);        //Loads from memory locations ($uint16_t) and
+                                                                    //($uint16_t+4) into registers X and Y.
+        void DirectLoadSP(uint16_t n);                              //Loads from memory location ($uint16_t) into Stack Pointer.
 
         /*
         /   Immediate loading of registers
         /   Can be used to load any specific register or register pair with a specific fixed value.
         */
 
-        ImmediateLoadX(Register X, uint8_t n);                //Loads register X with the value $uint8_t.
-        ImmediateLoadXY(Register X, Register Y, uint16_t n);  //Loads registers X and Y with the value $uint16_t.
+        void ImmediateLoad(Register X, uint8_t n);                  //Loads register X with the value $uint8_t.
+        void ImmediateLoad(Register X, Register Y, uint16_t n);     //Loads registers X and Y with the value $uint16_t.
 
         /*
         /   Stack loading of registers
         */
 
-        PopXY(Register X, Register Y);
+        void PopXY(Register X, Register Y);              //Loads a register pair from the top of the stack, incrementing SP.
 
         /*
         /   Storing registers in memory
         */
 
-        StoreXInMemory(Memory Loc, Register X);     //Loads the contents of register X into memory location ($Loc).
-        StoreAInMemory(Memory Loc);                 //Loads the contents of register A into memory location ($Loc).
-        StoreXAtHL(Register X);                     //Loads the contents of register X into memory location (HL).
-        StoreAAtHL();                               //Loads the contents of register A into memory location (HL).
-        StoreValueAtHL(uint8_t n);                  //Loads the value n into memory location (HL).
+        void Store(Memory Loc, Register X);     //Loads the contents of register X into memory location ($Loc).
+        void Store(Memory Loc);                 //Loads the contents of register A into memory location ($Loc).
+        void Store(Register X);                     //Loads the contents of register X into memory location (HL).
+        void Store();                               //Loads the contents of register A into memory location (HL).
+        void StoreValue(uint8_t n);                  //Loads the value n into memory location (HL).
 
     /*
-    /   8-bit Arithmetic and Logical Instructions
+    /   Arithmetic and Logical Instructions
     */
 
         /*
-        /
+        /   8-bit
         */
 
+        void ADD(Register X);
+        void ADD(uint8_t n);
+        void ADD();
+
+        void ADC(Register X);
+        void ADC(uint8_t n);
+        void ADC();
+
+        void SUB(Register X);
+        void SUB(uint8_t n);
+        void SUB();
+
+        void SBC(Register X);
+        void SBC(uint8_t n);
+        void SBC();
+
+        void AND(Register X);
+        void AND(uint8_t n);
+        void AND();
+
+        void OR(Register X);
+        void OR(uint8_t n);
+        void OR();
+
+        void XOR(Register X);
+        void XOR(uint8_t n);
+        void XOR();
+
+        void CP(Register X);
+        void CP(uint8_t n);
+        void CP();
+
+        void INC(Register X);
+        void INC();
+
+        void DEC(Register X);
+        void DEC();
+
+        /*
+        /   16-bit
+        */
+
+        void ADD(Register X, Register Y);
+
+        void INC(Register X, Register Y);
+
+        void DEC(Register X, Register Y);
+
+    /*
+    /   Rotate and Shift Operations
+    */
+
+    void RLCA();
+
+    void RLC(Register X);
+    void RLC();
+
+    void RLA();
+
+    void RL(Register X);
+    void RL();
+
+    //------------------------------------------------
+
+    void RRCA();
+
+    void RRC(Register X);
+    void RRC();
+
+    void RRA();
+
+    void RR(Register X);
+    void RR();
+
+    //--------------------------------------------------
+
+    void SLA(Register X);
+    void SLA();
+
+    void SRA(Register X);
+    void SRA();
+
+    void SRL(Register X);
+    void SRL();
+
+    /*
+    /   Bit manipulation
+    */
+
+    void BIT(Bit b, Register X);
+    void BIT(Bit b);
+
+    void SET(Bit b, Register X);
+    void SET(Bit b);
+
+    void RES(Bit b, Register X);
+    void RES(Bit b);
+
+    /*
+    /   General purpose Arithmetic and CPU control
+    */
+
+    void DAA();
+
+    void CPL();
+
+    void SWAP(Register X);
+    void SWAP();
+
+    void CCF();
+
+    void SCF();
+
+    void NOP();
+
+    void HALT();
+
+    void STOP();
+
+    void DI();
+
+    void EI();
 
 
-    NOP();
-    Increment(Register A);
-    Decrement(Register A);
-    8Bit_Add(Register B);
-    8Bit_Add_Mem();
-    8Bit_Add_unsigned(uint8_t n);
-    8Bit_Add_signed(int8_t n);
-    16Bit_Add(Register A, Register B);
-    16Bit_Add_SP();
-    8Bit_Sub(Register B);
-    8Bit_Sub_Mem();
-    8Bit_Sub_unsigned(uint8_t n);
+
+
+
+
+
+
     Compare(Register A, Register B);
-    RotateLeft(Register A);
-    RotateRight(Register A);
-    ShiftLeft(Register A);
-    ShiftLeft_HL();
-    ShiftRight(Register A);
-    ShiftRight_HL();
-    Complement(Register A); //Logical NOT
-    OR(Register A, Register B);
-    AND(Register A, Register B);
-    XOR(Register A, Register B);
     Push(Register SP);
     Pop(Register SP);
     ClearCarryFlag(Register F);
