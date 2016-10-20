@@ -1,12 +1,12 @@
-#include "Registers.h"
+#include "../include/Register.h"
 
-Registers::Registers(int sizeInBytes)
+Register::Register(int sizeInBytes)
 {
-    size = sizeInHex;
+    size = sizeInBytes;
     storage = new uint8_t[sizeInBytes];
 }
 
-Registers::~Registers()
+Register::~Register()
 {
     delete[] storage;
 }
@@ -30,7 +30,7 @@ void Register::SetHex(int index, uint8_t hex)
     storage[realIndex] = (storage[realIndex] & (0xFF - mask)) | ((hex & 0x0F) << offset);
 }
 
-void RegisterSetByte(int index, uint8_t byte)
+void Register::SetByte(int index, uint8_t byte)
 {
     storage[index] = byte;
 }
