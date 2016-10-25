@@ -46,12 +46,12 @@ public:
     /*
     /   8 and 16-bit Loads
     */
-		/*
-        /	8-bit loads
-		*/
-
+		
 // --------------------------------------------------------------
 
+/*
+/   8-bit loads
+*/
 
     /*To Register*/
 
@@ -60,133 +60,109 @@ public:
             // Loading into register r the contents of memory address (0xFFn).
             void Load(Register* r, uint8_t n);
 
+            /*Loads into register r the contents of the internal RAM or register specified 
+            by the 16-bit immediate operand nn.*/
+            void Load(Register* r, uint16_t nn);  
+
             /* Loads into register r the contents of internal RAM, port register, or mode 
             register at the address in the range 0xFF00-0xFFFF specified by register X. 
             Loads r <-- ($FF00+X).*/
-            void Load(Register* r, Register* X);    
-
-            /*Loads into register r the contents of the internal RAM or register specified 
-            by the 16-bit immediate operand nn.*/
-            void Load(Register* r, uint16_t nn);    
+            void Load(Register* r, Register* X);       
 
             /*Loads into register r the contents of memory specified by the contents of 
             register pair xy, simultaneously incrememnt the contents of HL.*/
             void Load_Increment(Register* r, Register* X, Register* Y);
 
-            //Loads into register r the contents of memory specified by the contents of register pair xy, simultaneously decrementing the contents of HL.
+            /*Loads into register r the contents of memory specified by the contents of 
+            register pair xy, simultaneously decrementing the contents of HL.*/
             void Load_Decrement(Register* r, Register* X, Register* Y);
 
         /*From Register*/
 
             // Loads into register r the contents of register X.
-            void Load(Register* r, Register* X);
+            void Load_Register(Register* r, Register* X);
 
         /*Immediate Value*/
 
             // Loads into register r the immediate value of n.
-            void Load(Register* r, uint8_t n);
+            void Load_Immediate(Register* r, uint8_t n);
 
     /*To Memory*/
 
         /*From Register*/
 
-            // Stores the contents of register r in memory specified by register pair xy.
-            void Store(Register* r, Register* X, Register* Y);
+            /*Loading from register r into memory address (0xFF00-0xFFFF) determined by
+            the value of n.*/
+            void Store(Register* r, uint8_t n);
+
+            /*Stores the contents of register A at the internal RAM or register specified 
+            by the 16-bit immediate operand nn.*/
+            void Store(Register* r, uint16_t nn);
 
             // Loads r -- > ($FF00+X)
             void Store(Register* r, Register* X);
 
-            // Loading from register r into memory address (0xFF00-0xFFFF) determined by the value of n.
-            void Store(Register* r, uint8_t n);
+            // Stores the contents of register r in memory specified by register pair xy.
+            void Store(Register* r, Register* X, Register* Y);
 
-            // Stores the contents of register A at the internal RAM or register specified by the 16-bit immediate operand nn.
-            void Store(Register* r, uint16_t nn);
-
-            //Store the contents of register r in the memory specified by register pair xy, simultaneously increment the contents of xy.
+            /*Store the contents of register r in the memory specified by register pair xy, 
+            simultaneously increment the contents of xy.*/
             void Store_Increment(Register* r, Register* X, Register* Y);
 
-            //Store the contents of register r in the memory specified by register pair xy, simultaneously decrement the contents of xy.
+            /*Store the contents of register r in the memory specified by register pair xy, 
+            simultaneously decrement the contents of xy.*/
             void Store_Decrement(Register* r, Register* X, Register* Y);
-
-        /*From Registers?*/
 
         /*Immediate Value*/
 
             // Loads 8-bit immediate data n into memory specified by register pair xy.
             void Store(Register* X, Register* Y, uint8_t n);
 
+/*
+/   16-bit loads
+*/
 
+    /*To Register*/
 
-                
+        /*Immediate Data*/
 
-    
-        
+            // Load two bytes of immediate data to register pair xy.
+            Load(uint8_t n, uint8_t m, Register* X, Register* Y);
 
+        /*From Stack Pointer*/
 
+            // The 8-bit operand e is added to SP and the result is stored in HL.
+            Load(Register* SP, Register* X, Register* Y, uint8_t e);
 
+    /*To Memory*/
 
+        /*From Stack Pointer*/
 
-// --------------------------------------------------------------
+            /*Stores the lower byte of SP at address nn specified by the 16-bit immediate 
+            operand nn and the upper byte of SP at address nn + 1.*/
+            Store(Register* SP, uint16_t nn);
 
+    /*To Stack Pointer*/
 
-    	
+        /*From Registers*/
 
-    	
+            // Load the contents of register pair HL(not the memory location) in stack pointer SP.
+            Load(Register* X, Register* Y, Register* SP);
 
-		
+    /*Not sure how to classify push and pop....*/
 
-		
-
-
-
-
-
-    	
-
-    	
-
-		
-
-		
-
-		
-
-		
-
-		
-
-		
-
-		
-
-// 16 bit
-
-        // Load two bytes of immediate data to register pair xy.
-        LD(uint8_t n, uint8_t m, Register* X, Register* Y);
-
-        // Load the contents of register pair HL in stack pointer SP.
-        LD(Register* X, Register* Y, Register* SP);
-
-         /*Pushes the contents of register pair qq onto the memory stack. First 1 is subtracted from SP
-          and the contents of the higherportion of qq are placed on the stack. The contents of the lower
-          portion of qq are then placed on the stack. The contents of SP are automatically decremented by 2.*/
+        /*Pushes the contents of register pair qq onto the memory stack. First 1 is 
+        subtracted from SP and the contents of the higherportion of qq are placed on 
+        the stack. The contents of the lower portion of qq are then placed on the 
+        stack. The contents of SP are automatically decremented by 2.*/
         Push(Register* SP, Register* X, Register* Y);
 
-        /*Pops the contents from the memory stack and into register pair qq. First the contents of memory, specified
-        by the contents of SP are loaded in the lower portion of qq. Next, the contents of SP are incremented by 1
-        and the contents of the memory they specify are loaded in the upper portion of qq. The contents of SP are
-        automatically incremented by 2.*/
+        /*Pops the contents from the memory stack and into register pair qq. First 
+        the contents of memory, specified by the contents of SP are loaded in the 
+        lower portion of qq. Next, the contents of SP are incremented by 1 and the 
+        contents of the memory they specify are loaded in the upper portion of qq. 
+        The contents of SP are automatically incremented by 2.*/
         Pop(Register* SP, Register* X, Register* Y);
-
-        // The 8-bit operand e is added to SP and the result is stored in HL.
-        LDHL(Register* SP, Register* X, Register* Y, uint8_t e);
-
-        /*Stores the lower byte of SP at address nn specified by the 16-bit immediate operand nn and the upper byte
-        of SP at address nn + 1.*/
-        LD(Register* SP, uint16_t nn);
-
-
-
 
     /*
     /   Arithmetic and Logical Instructions
