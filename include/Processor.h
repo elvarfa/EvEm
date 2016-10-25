@@ -53,9 +53,74 @@ public:
 // --------------------------------------------------------------
 
 
-    	// To Memory
+    /*To Register*/
+
+        /*From Memory*/
+
+            // Loading into register r the contents of memory address (0xFFn).
+            void Load(Register* r, uint8_t n);
+
+            /* Loads into register r the contents of internal RAM, port register, or mode 
+            register at the address in the range 0xFF00-0xFFFF specified by register X. 
+            Loads r <-- ($FF00+X).*/
+            void Load(Register* r, Register* X);    
+
+            /*Loads into register r the contents of the internal RAM or register specified 
+            by the 16-bit immediate operand nn.*/
+            void Load(Register* r, uint16_t nn);    
+
+            /*Loads into register r the contents of memory specified by the contents of 
+            register pair xy, simultaneously incrememnt the contents of HL.*/
+            void Load_Increment(Register* r, Register* X, Register* Y);
+
+            //Loads into register r the contents of memory specified by the contents of register pair xy, simultaneously decrementing the contents of HL.
+            void Load_Decrement(Register* r, Register* X, Register* Y);
+
+        /*From Register*/
+
+            // Loads into register r the contents of register X.
+            void Load(Register* r, Register* X);
+
+        /*Immediate Value*/
+
+            // Loads into register r the immediate value of n.
+            void Load(Register* r, uint8_t n);
+
+    /*To Memory*/
+
+        /*From Register*/
+
+            // Stores the contents of register r in memory specified by register pair xy.
+            void Store(Register* r, Register* X, Register* Y);
+
+            // Loads r -- > ($FF00+X)
+            void Store(Register* r, Register* X);
+
+            // Loading from register r into memory address (0xFF00-0xFFFF) determined by the value of n.
+            void Store(Register* r, uint8_t n);
+
+            // Stores the contents of register A at the internal RAM or register specified by the 16-bit immediate operand nn.
+            void Store(Register* r, uint16_t nn);
+
+            //Store the contents of register r in the memory specified by register pair xy, simultaneously increment the contents of xy.
+            void Store_Increment(Register* r, Register* X, Register* Y);
+
+            //Store the contents of register r in the memory specified by register pair xy, simultaneously decrement the contents of xy.
+            void Store_Decrement(Register* r, Register* X, Register* Y);
+
+        /*From Registers?*/
+
+        /*Immediate Value*/
+
+            // Loads 8-bit immediate data n into memory specified by register pair xy.
+            void Store(Register* X, Register* Y, uint8_t n);
 
 
+
+                
+
+    
+        
 
 
 
@@ -64,58 +129,35 @@ public:
 // --------------------------------------------------------------
 
 
-    	// To Register
+    	
 
-    	// Loads into register r the contents of register X.
-    	void LD_Register(Register* r, Register* X);
+    	
 
-    	// Loads into register r the immediate value of n.
-    	void LD_Immediate(Register* r, uint8_t n);
+		
 
-		// Loads into register r the contents of internal RAM, port register, or mode register at the address in the range 0xFF00-0xFFFF specified by register X.
-		// Loads r <-- ($FF00+X)
-		void LD_To(Register* r, Register* X);
-
-		// Loading into register r the contents of memory address (0xFFn).
-		void LD_To(Register* r, uint8_t n);
+		
 
 
 
-// --------------------------------------------------------------
 
 
+    	
 
-    	// Stores the contents of register r in memory specified by register pair xy.
-    	void Store(Register* r, Register* X, Register* Y);
+    	
 
-		// Store the contents of register r in the memory specified by register pair BC.
+		
 
-    	// Loads 8-bit immediate data n into memory specified by register pair xy.
-    	void LD_Immediate(Register* X, Register* Y, uint8_t n);
+		
 
-    	// Loads r -- > ($FF00+X)
-    	void LD_From(Register* r, Register* X);
+		
 
-		// Loading from register r into memory address (0xFF00-0xFFFF) determined by the value of n.
-		void LD_From(Register* r, uint8_t n);
+		
 
-		// Loads into register r the contents of the internal RAM or register specified by the 16-bit immediate operand nn.
-		void LD(Register* r, uint16_t nn);
+		
 
-		// Loads the contents of register A to the internal RAM or register specified by the 16-bit immediate operand nn.
-		void LD(Register* r, uint16_t nn);
+		
 
-		//Loads into register r the contents of memory specified by the contents of register pair xy, simultaneously incrememnt the contents of HL.
-		void LDI(Register* r, Register* X, Register* Y);
-
-		//Loads into register r the contents of memory specified by the contents of register pair xy, simultaneously decrementing the contents of HL.
-		void LDD(Register* r, Register* X, Register* Y);
-
-		//Store the contents of register r in the memory specified by register pair xy, simultaneously increment the contents of xy.
-		void StoreI(Register* r, Register* X, Register* Y);
-
-		//Store the contents of register r in the memory specified by register pair xy, simultaneously decrement the contents of xy.
-		void StoreD(Register* r, Register* X, Register* Y);
+		
 
 // 16 bit
 
