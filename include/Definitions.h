@@ -49,24 +49,4 @@ enum Gameboy_Keys
     Down_Key = 3
 };
 
-#ifdef DEBUG_EVEM
-#define Log(msg, ...) (Log_func(msg, ##__VA_ARGS__))
-#else
-#define Log(msg, ...)
-#endif
-
-inline void Log_func(const char* const msg, ...)
-{
-    static int count = 1;
-    char szBuf[512];
-    va_list args;
-    va_start(args, msg);
-    vsprintf(szBuf, msg, args);
-    va_end(args);
-
-    printf("%d: %s\n", count, szBuf);
-
-    count++;
-}
-
 #endif // DEFINITIONS_H

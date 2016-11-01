@@ -1,6 +1,7 @@
 #ifndef REGISTER_H
 #define REGISTER_H
 
+#include "Definitions.h"
 
 class Register
 {
@@ -10,6 +11,11 @@ class Register
     public:
         Register(int sizeInBytes);
         virtual ~Register();
+        void SetHex(int index, uint8_t hex);
+        void SetByte(int index, uint8_t byte);
+        uint8_t GetHex(int index);
+        uint8_t GetByte(int index);
+        int GetSize();
 
     protected:
 
