@@ -2,10 +2,8 @@
 
 Memory::Memory()
 {
-    //ctor
 }
 
 Memory::~Memory()
 {
-    //dtor
 }

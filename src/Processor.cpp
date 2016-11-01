@@ -1,9 +1,10 @@
 #include "../include/Processor.h"
 #include "../include/Register.h"
 
-Processor::Processor(Memory* pMemory)
+Processor::Processor(Memory* memory)
 {
-    //m_pMemory = pMemory;
+
+    this->memory = memory;
     //pMemory->SetProcessor(this);
     InitOpcodes();
 }
