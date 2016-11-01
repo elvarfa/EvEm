@@ -122,12 +122,12 @@ public:
         /*Immediate Data*/
 
             // Load two bytes of immediate data to register pair xy.
-            Load(uint8_t n, uint8_t m, Register* X, Register* Y);
+			void Load(uint8_t n, uint8_t m, Register* X, Register* Y);
 
         /*From Stack Pointer*/
 
             // The 8-bit operand e is added to SP and the result is stored in HL.
-            Load(Register* SP, Register* X, Register* Y, uint8_t e);
+			void Load(Register* SP, Register* X, Register* Y, uint8_t e);
 
     /*To Memory*/
 
@@ -135,14 +135,14 @@ public:
 
             /*Stores the lower byte of SP at address nn specified by the 16-bit immediate 
             operand nn and the upper byte of SP at address nn + 1.*/
-            Store(Register* SP, uint16_t nn);
+			void Store_SP(Register* SP, uint16_t nn);
 
     /*To Stack Pointer*/
 
         /*From Registers*/
 
             // Load the contents of register pair HL(not the memory location) in stack pointer SP.
-            Load(Register* X, Register* Y, Register* SP);
+			void Load(Register* X, Register* Y, Register* SP);
 
     /*Not sure how to classify push and pop....*/
 
@@ -150,14 +150,14 @@ public:
         subtracted from SP and the contents of the higherportion of qq are placed on 
         the stack. The contents of the lower portion of qq are then placed on the 
         stack. The contents of SP are automatically decremented by 2.*/
-        Push(Register* SP, Register* X, Register* Y);
+        void Push(Register* SP, Register* X, Register* Y);
 
         /*Pops the contents from the memory stack and into register pair qq. First 
         the contents of memory, specified by the contents of SP are loaded in the 
         lower portion of qq. Next, the contents of SP are incremented by 1 and the 
         contents of the memory they specify are loaded in the upper portion of qq. 
         The contents of SP are automatically incremented by 2.*/
-        Pop(Register* SP, Register* X, Register* Y);
+        void Pop(Register* SP, Register* X, Register* Y);
 
     /*
     /   Arithmetic and Logical Instructions

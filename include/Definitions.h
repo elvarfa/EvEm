@@ -61,7 +61,7 @@ inline void Log_func(const char* const msg, ...)
     char szBuf[512];
     va_list args;
     va_start(args, msg);
-    vsprintf(szBuf, msg, args);
+    vsprintf_s(szBuf, msg, args);
     va_end(args);
 
     printf("%d: %s\n", count, szBuf);
