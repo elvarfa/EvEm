@@ -1,12 +1,11 @@
 #ifndef PROCESSOR_H
 #define	PROCESSOR_H
 
-#include "Register.h"
 #include "Definitions.h"
+#include "Memory.h"
+#include "Register.h"
 #include <unordered_map>
 #include <functional>
-
-class Memory;
 
 class Processor
 {
@@ -23,7 +22,7 @@ public:
     Register* SP = new Register(2);
 
 private:
-    std::unordered_map<uint8_t, std::function<void(Processor* p)>>* operations;
+    std::unordered_map<uint8_t, std::function<void(Processor* p, unsigned int* m, unsigned int* t)>>* operations;
     unsigned int mClock;
     unsigned int tClock;
 
@@ -32,7 +31,10 @@ public:
     Processor(Memory* memory);
     ~Processor();
 
+    inline bool IsRunning() { return true; };
+
     void InitOpcodes();
+    inline uint8_t FetchInstruction() { return memory->GetByte((((uint16_t)PC->GetByte(1)) << 8) & PC->GetByte(0)); };
     void ProcessOpcode(uint8_t code);
 
 /*
@@ -42,7 +44,7 @@ public:
     /*
     /   8 and 16-bit Loads
     */
-		
+
 // --------------------------------------------------------------
 
 /*
@@ -56,20 +58,20 @@ public:
             // Loading into register r the contents of memory address (0xFFn).
             void Load(Register* r, uint8_t n);
 
-            /*Loads into register r the contents of the internal RAM or register specified 
+            /*Loads into register r the contents of the internal RAM or register specified
             by the 16-bit immediate operand nn.*/
-            void Load(Register* r, uint16_t nn);  
+            void Load(Register* r, uint16_t nn);
 
-            /* Loads into register r the contents of internal RAM, port register, or mode 
-            register at the address in the range 0xFF00-0xFFFF specified by register X. 
+            /* Loads into register r the contents of internal RAM, port register, or mode
+            register at the address in the range 0xFF00-0xFFFF specified by register X.
             Loads r <-- ($FF00+X).*/
-            void Load(Register* r, Register* X);       
+            void Load(Register* r, Register* X);
 
-            /*Loads into register r the contents of memory specified by the contents of 
+            /*Loads into register r the contents of memory specified by the contents of
             register pair xy, simultaneously incrememnt the contents of HL.*/
             void Load_Increment(Register* r, Register* X, Register* Y);
 
-            /*Loads into register r the contents of memory specified by the contents of 
+            /*Loads into register r the contents of memory specified by the contents of
             register pair xy, simultaneously decrementing the contents of HL.*/
             void Load_Decrement(Register* r, Register* X, Register* Y);
 
@@ -91,7 +93,7 @@ public:
             the value of n.*/
             void Store(Register* r, uint8_t n);
 
-            /*Stores the contents of register A at the internal RAM or register specified 
+            /*Stores the contents of register A at the internal RAM or register specified
             by the 16-bit immediate operand nn.*/
             void Store(Register* r, uint16_t nn);
 
@@ -101,11 +103,11 @@ public:
             // Stores the contents of register r in memory specified by register pair xy.
             void Store(Register* r, Register* X, Register* Y);
 
-            /*Store the contents of register r in the memory specified by register pair xy, 
+            /*Store the contents of register r in the memory specified by register pair xy,
             simultaneously increment the contents of xy.*/
             void Store_Increment(Register* r, Register* X, Register* Y);
 
-            /*Store the contents of register r in the memory specified by register pair xy, 
+            /*Store the contents of register r in the memory specified by register pair xy,
             simultaneously decrement the contents of xy.*/
             void Store_Decrement(Register* r, Register* X, Register* Y);
 
@@ -134,7 +136,7 @@ public:
 
         /*From Stack Pointer*/
 
-            /*Stores the lower byte of SP at address nn specified by the 16-bit immediate 
+            /*Stores the lower byte of SP at address nn specified by the 16-bit immediate
             operand nn and the upper byte of SP at address nn + 1.*/
 			void Store_SP(Register* SP, uint16_t nn);
 
@@ -147,16 +149,16 @@ public:
 
     /*Not sure how to classify push and pop....*/
 
-        /*Pushes the contents of register pair qq onto the memory stack. First 1 is 
-        subtracted from SP and the contents of the higherportion of qq are placed on 
-        the stack. The contents of the lower portion of qq are then placed on the 
+        /*Pushes the contents of register pair qq onto the memory stack. First 1 is
+        subtracted from SP and the contents of the higherportion of qq are placed on
+        the stack. The contents of the lower portion of qq are then placed on the
         stack. The contents of SP are automatically decremented by 2.*/
         void Push(Register* SP, Register* X, Register* Y);
 
-        /*Pops the contents from the memory stack and into register pair qq. First 
-        the contents of memory, specified by the contents of SP are loaded in the 
-        lower portion of qq. Next, the contents of SP are incremented by 1 and the 
-        contents of the memory they specify are loaded in the upper portion of qq. 
+        /*Pops the contents from the memory stack and into register pair qq. First
+        the contents of memory, specified by the contents of SP are loaded in the
+        lower portion of qq. Next, the contents of SP are incremented by 1 and the
+        contents of the memory they specify are loaded in the upper portion of qq.
         The contents of SP are automatically incremented by 2.*/
         void Pop(Register* SP, Register* X, Register* Y);
 
