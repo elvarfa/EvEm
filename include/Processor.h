@@ -27,8 +27,9 @@ private:
     unsigned int mClock;
     unsigned int tClock;
 
+    Memory* memory;
 public:
-    Processor(Memory* pMemory);
+    Processor(Memory* memory);
     ~Processor();
 
     void InitOpcodes();
