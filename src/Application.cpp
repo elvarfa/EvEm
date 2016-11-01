@@ -1,10 +1,11 @@
 #include "../include/Processor.h"
 #include "../include/Memory.h"
-
 #include <string>
 
 int main()
 {
+    int v = 0;
+
     Processor p(new Memory());
     p.A->SetByte(0, 0x01);
     p.B->SetByte(0, 0x01);
