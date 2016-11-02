@@ -2,6 +2,7 @@
 
 Memory::Memory()
 {
+    inBIOS = false;
 }
 
 Memory::~Memory()
