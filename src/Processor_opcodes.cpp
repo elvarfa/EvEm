@@ -15,7 +15,11 @@ void Processor::ProcessOpcode(uint8_t code)
     else
         this->PC->SetByte(0, temp + 1);
 
-    (*operations)[code](this, &(this->mClock), &(this->tClock));
+    (*operations)[code](this, &(this->m), &(this->t));
+    this->mClock += m;
+    this->tClock += t;
+
+    // Increment program counter and prevent it from going over limit?
 }
 
 void Processor::InitOpcodes()

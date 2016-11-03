@@ -1,9 +1,8 @@
 #include "../include/Processor.h"
-#include "../include/Register.h"
 
-Processor::Processor(Memory* memory)
+Processor::Processor(GPU* gpu, Memory* memory)
 {
-
+    this->gpu = gpu;
     this->memory = memory;
     //pMemory->SetProcessor(this);
     InitOpcodes();
@@ -40,7 +39,12 @@ void Processor::Reset(){
     this->T->SetByte(0, 0x00);
 }
 
-// Loading into register r the contents of memory address (0xFFn)%.
+void Processor::Render()
+{
+    gpu->Step(this->tClock);
+}
+
+// Loading into register r the contents of memory address (0xFFn).
 void Processor::Load(Register* r, uint8_t n) {
     r->SetByte(0, this->memory->GetByte(0xFF00 | n));
     this->M->SetByte(0, 0x03);

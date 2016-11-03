@@ -30,17 +30,28 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add directory="dependencies/include" />
 		</Compiler>
+		<Linker>
+			<Add option="-lGL" />
+			<Add library="dependencies/lib/libglfw.so" />
+			<Add library="dependencies/lib/libGLEW.so" />
+			<Add directory="dependencies/lib" />
+		</Linker>
+		<Unit filename="include/Application.h" />
 		<Unit filename="include/Definitions.h" />
+		<Unit filename="include/GPU.h" />
 		<Unit filename="include/Memory.h" />
 		<Unit filename="include/Processor.h" />
 		<Unit filename="include/Register.h" />
+		<Unit filename="include/Screen.h" />
 		<Unit filename="src/Application.cpp" />
-		<Unit filename="src/Application.h" />
+		<Unit filename="src/GPU.cpp" />
 		<Unit filename="src/Memory.cpp" />
 		<Unit filename="src/Processor.cpp" />
 		<Unit filename="src/Processor_opcodes.cpp" />
 		<Unit filename="src/Register.cpp" />
+		<Unit filename="src/Screen.cpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />

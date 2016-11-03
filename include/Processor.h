@@ -2,6 +2,7 @@
 #define	PROCESSOR_H
 
 #include "Definitions.h"
+#include "GPU.h"
 #include "Memory.h"
 #include "Register.h"
 #include <unordered_map>
@@ -26,21 +27,31 @@ public:
     Register* T = new Register(1);
 
 private:
+    unsigned int m, t;
     std::unordered_map<uint8_t, std::function<void(Processor* p, unsigned int* m, unsigned int* t)>>* operations;
-    unsigned int mClock;
-    unsigned int tClock;
 
     Memory* memory;
+    GPU* gpu;
 public:
-    Processor(Memory* memory);
+    Processor(GPU* gpu, Memory* memory);
     ~Processor();
 
     inline bool IsRunning() { return true; };
 
     void InitOpcodes();
-    inline uint8_t FetchInstruction() { return memory->GetByte((((uint16_t)PC->GetByte(1)) << 8) & PC->GetByte(0)); };
+    inline uint8_t FetchInstruction()
+    {
+        uint16_t pc = (((uint16_t)PC->GetByte(1)) << 8) & PC->GetByte(0);
+        if (pc == 0x1000)
+        {
+            memory->SetBIOS(false);
+        }
+        return memory->GetByte(pc);
+    };
+
     void ProcessOpcode(uint8_t code);
 
+    void Render();
 /*
 /   Instruction Sets
 */
