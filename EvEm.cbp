@@ -14,6 +14,12 @@
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
+				<Linker>
+					<Add option="-lGL" />
+					<Add library="glfw" />
+					<Add library="GLEW" />
+					<Add directory="dependencies/lib" />
+				</Linker>
 			</Target>
 			<Target title="Release">
 				<Option output="bin/Release/EvEm" prefix_auto="1" extension_auto="1" />
@@ -25,6 +31,43 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
+					<Add option="-lGL" />
+					<Add library="glfw" />
+					<Add library="GLEW" />
+					<Add directory="dependencies/lib" />
+				</Linker>
+			</Target>
+			<Target title="DebugWin">
+				<Option output="bin/Debug/EvEm" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add library="opengl32" />
+					<Add library="gdl32" />
+					<Add library="glfw3" />
+					<Add library="glew32" />
+					<Add directory="dependencies/lib" />
+				</Linker>
+			</Target>
+			<Target title="ReleaseWIn">
+				<Option output="bin/Release/EvEm" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="opengl32" />
+					<Add library="gdl32" />
+					<Add library="glfw3" />
+					<Add library="glew32" />
+					<Add directory="dependencies/lib" />
 				</Linker>
 			</Target>
 		</Build>
@@ -32,12 +75,6 @@
 			<Add option="-Wall" />
 			<Add directory="dependencies/include" />
 		</Compiler>
-		<Linker>
-			<Add option="-lGL" />
-			<Add library="dependencies/lib/libglfw.so" />
-			<Add library="dependencies/lib/libGLEW.so" />
-			<Add directory="dependencies/lib" />
-		</Linker>
 		<Unit filename="include/Application.h" />
 		<Unit filename="include/Definitions.h" />
 		<Unit filename="include/GPU.h" />
