@@ -21,6 +21,10 @@ public:
     Register* PC = new Register(2);
     Register* SP = new Register(2);
 
+    //Clock registers
+    Register* M = new Register(1);
+    Register* T = new Register(1);
+
 private:
     std::unordered_map<uint8_t, std::function<void(Processor* p, unsigned int* m, unsigned int* t)>>* operations;
     unsigned int mClock;
@@ -174,15 +178,16 @@ public:
         void ADD(Register* X, Register* Y, Register* Z, Register* W);
         void ADD(Register* X, Register* Y, Register* ZW);
         void ADD(Register* X, uint8_t n);
-        void ADD(int8_t n);
+        void ADD(Register* SP, int8_t n);
+        void ADDHL(Register* X, Register* H, Register* L);
 
         void ADC(Register* X);
         void ADC(uint8_t n);
         void ADC();
 
-        void SUB(Register* X);
-        void SUB(uint8_t n);
-        void SUB();
+        void SUB(Register* X, Register* Y);
+        void SUB(Register* X, uint8_t n);
+        void SUB(Register* A, Register* H, Register* L);
 
         void SBC(Register* X);
         void SBC(uint8_t n);
@@ -205,10 +210,12 @@ public:
         void CP();
 
         void INC(Register* X);
-        void INC();
+        void INC(Register* X, Register* Y);
+        void INCHL(Register* H, Register* L);
 
         void DEC(Register* X);
-        void DEC();
+        void DEC(Register* X, Register* Y);
+        void DECHL(Register* H, Register* L);
 
         /*
         /   16-bit
@@ -306,7 +313,10 @@ public:
     //Push(Register* SP);
     //Pop(Register* SP);
     //ClearCarryFlag(Register* F);
-    //Reset(???);
+    void Reset();
+
+    //Helper Functions
+    void FlagHelper(uint16_t n, int as);
 };
 
 #endif	/* PROCESSOR_H */
