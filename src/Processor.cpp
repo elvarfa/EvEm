@@ -1,9 +1,8 @@
 #include "../include/Processor.h"
-#include "../include/Register.h"
 
-Processor::Processor(Memory* memory)
+Processor::Processor(GPU* gpu, Memory* memory)
 {
-
+    this->gpu = gpu;
     this->memory = memory;
     //pMemory->SetProcessor(this);
     InitOpcodes();
@@ -32,7 +31,7 @@ void Processor::Reset(){
     this->D->SetByte(0, 0x00);
     this->E->SetByte(0, 0x00);
     this->H->SetByte(0, 0x00);
-    this->K->SetByte(0, 0x00);
+    this->L->SetByte(0, 0x00);
     this->F->SetByte(0, 0x00);
     this->PC->SetByte(0, 0x00);
     this->SP->SetByte(0, 0x00);
@@ -40,7 +39,12 @@ void Processor::Reset(){
     this->T->SetByte(0, 0x00);
 }
 
-// Loading into register r the contents of memory address (0xFFn)%.
+void Processor::Render()
+{
+    gpu->Step(this->T->GetByte(0));
+}
+
+// Loading into register r the contents of memory address (0xFFn).
 void Processor::Load(Register* r, uint8_t n) {
     r->SetByte(0, this->memory->GetByte(0xFF00 | n));
     this->M->SetByte(0, 0x03);
@@ -69,7 +73,7 @@ register pair xy %*/
 void Processor::Load(Register* r, Register* X, Register* Y){
     uint16_t temp = X->GetByte(0) >> 8;
     temp = Y->GetByte(0);
-    r->SetByte(this->memory->GetByte(temp));
+    r->SetByte(0, this->memory->GetByte(temp));
     this->M->SetByte(0, 0x02);
     this->T->SetByte(0, 0x08);
 }
@@ -79,7 +83,7 @@ register pair xy, simultaneously incrememnt the contents of HL.%*/
 void Processor::Load_Increment(Register* r, Register* X, Register* Y) {
     uint16_t temp = X->GetByte(0) >> 8;
     temp = Y->GetByte(0);
-    r->SetByte(this->memory->GetByte(temp));
+    r->SetByte(0, this->memory->GetByte(temp));
     temp++;
     X->SetByte(0, (uint8_t)((temp & 0xFF00) >> 8));
     Y->SetByte(0, (uint8_t)(temp & 0x00FF));
@@ -92,7 +96,7 @@ register pair XY, then decrementing the pair XY.%*/
 void Processor::Load_Decrement(Register* r, Register* X, Register* Y) {
     uint16_t temp = X->GetByte(0) >> 8;
     temp = Y->GetByte(0);
-    r->SetByte(this->memory->GetByte(temp));
+    r->SetByte(0, this->memory->GetByte(temp));
     temp--;
     X->SetByte(0, (uint8_t)((temp & 0xFF00) >> 8));
     Y->SetByte(0, (uint8_t)(temp & 0x00FF));
@@ -239,7 +243,7 @@ void Processor::Store_SP(Register* SP, uint16_t nn){
 /*From Registers*/
 
 // Load the contents of register pair HL(not the memory location) in stack pointer SP.%
-void Processor::Load(Register* X, Register* Y, Register* SP) {
+void Processor::Load_HL(Register* X, Register* Y, Register* SP) {
     X->SetByte(0, (SP->GetByte(1)));
     Y->SetByte(0, (SP->GetByte(0)));
     this->M->SetByte(0, 0x02);
@@ -275,9 +279,9 @@ void Processor::Pop(Register* SP, Register* X, Register* Y) {
     uint16_t temp = SP->GetByte(1) << 8;
     temp = SP->GetByte(0);
     X->SetByte(0, this->memory->GetByte(SP->GetByte(0)));
-    temp++
+    temp++;
     Y->SetByte(0, this->memory->GetByte(SP->GetByte(0)));
-    temp++
+    temp++;
     SP->SetByte(1, (uint8_t)temp >> 8);
     SP->SetByte(0, (uint8_t)temp && 0x00FF);
     this->M->SetByte(0, 0x03);
@@ -287,7 +291,7 @@ void Processor::Pop(Register* SP, Register* X, Register* Y) {
 
 void Processor::ADD(Register* X, Register* Y){
     uint16_t sum = (uint16_t)X->GetByte(0) + (uint16_t)Y->GetByte(0);
-    this.FlagHelper(sum, 0);
+    this->FlagHelper(sum, 0);
     if(sum > 255)
         this->F->SetHex(1, 0x1);
 
@@ -330,7 +334,7 @@ void Processor::ADD(Register* X, Register* Y, Register* ZW){
 
 void Processor::ADD(Register* X, uint8_t n){
     uint16_t sum = (uint16_t)X->GetByte(0) + n;
-    this.FlagHelper(sum, 0);
+    this->FlagHelper(sum, 0);
     if(sum > 255)
         this->F->SetHex(1, 0x1);
 
@@ -360,7 +364,7 @@ void Processor::ADDHL(Register* X, Register* H, Register* L){
     temp = L->GetByte(0);
     uint16_t sum = X->GetByte(0);
     sum += this->memory->GetByte(temp);
-    this.FlagHelper(sum, 0);
+    this->FlagHelper(sum, 0);
     if(sum > 255)
         this->F->SetHex(0, 0x1);
     X->SetByte(0, (uint8_t)sum & 0x00FF);
@@ -371,7 +375,7 @@ void Processor::ADDHL(Register* X, Register* H, Register* L){
 void Processor::ADC(Register* X, Register* Y){
     uint16_t sum = (uint16_t)X->GetByte(0) + (uint16_t)Y->GetByte(0);
     sum+=(uint16_t)(this->F->GetByte(0)&0x10)!=0 ? 1 : 0;
-    this.FlagHelper(sum, 0);
+    this->FlagHelper(sum, 0);
     if(sum > 255)
         this->F->SetHex(0, 0x1);
     X->SetByte(0, (uint8_t)sum & 0x00FF);
@@ -380,9 +384,9 @@ void Processor::ADC(Register* X, Register* Y){
 }
 
 void Processor::ADC(Register* X, uint8_t n){
-    uint16_t sum = (uint16_t)X->GetByte(0) + (uint16_t)Y->GetByte(0);
+    uint16_t sum = (uint16_t)X->GetByte(0) + n;
     sum+=(uint16_t)(this->F->GetByte(0)&0x10)!=0 ? 1 : 0;
-    this.FlagHelper(sum, 0);
+    this->FlagHelper(sum, 0);
     if(sum > 255)
         this->F->SetHex(0, 0x1);
     X->SetByte(0, (uint8_t)sum & 0x00FF);
@@ -396,7 +400,7 @@ void Processor::ADC(Register* X, Register* H, Register* L){
     uint16_t sum = X->GetByte(0);
     sum += this->memory->GetByte(temp);
     sum+=(uint16_t)(this->F->GetByte(0)&0x10)!=0 ? 1 : 0;
-    this.FlagHelper(sum, 0);
+    this->FlagHelper(sum, 0);
     if(sum > 255)
         this->F->SetHex(0, 0x1);
     X->SetByte(0, (uint8_t)sum & 0x00FF);
@@ -407,7 +411,7 @@ void Processor::ADC(Register* X, Register* H, Register* L){
 
 void Processor::SUB(Register* X, Register* Y){
     uint16_t sum = (uint16_t)X->GetByte(0) - (uint16_t)Y->GetByte(0);
-    this.FlagHelper(sum, 1);
+    this->FlagHelper(sum, 1);
     if(sum > 255)
         this->F->SetHex(1, 0x1);
 
@@ -418,7 +422,7 @@ void Processor::SUB(Register* X, Register* Y){
 
 void Processor::SUB(Register* X, uint8_t n){
     uint16_t sum = (uint16_t)X->GetByte(0) - n;
-    this.FlagHelper(sum, 1);
+    this->FlagHelper(sum, 1);
     if(sum > 255)
         this->F->SetHex(1, 0x1);
 
@@ -431,12 +435,12 @@ void Processor::SUB(Register* X, uint8_t n){
 void Processor::SUB(Register* A, Register* H, Register* L){
     uint16_t temp = H->GetByte(0) << 8;
     temp = L->GetByte(0);
-    uint16_t sum = X->GetByte(0);
+    uint16_t sum = A->GetByte(0);
     sum -= this->memory->GetByte(temp);
-    this.FlagHelper(sum, 0);
+    this->FlagHelper(sum, 0);
     if(sum > 65535)
         this->F->SetHex(0, 0x1);
-    X->SetByte(0, (uint8_t)sum & 0x00FF);
+    A->SetByte(0, (uint8_t)sum & 0x00FF);
     this->M->SetByte(0, 0x02);
     this->T->SetByte(0, 0x08);
 }
@@ -444,7 +448,7 @@ void Processor::SUB(Register* A, Register* H, Register* L){
 void Processor::SBC(Register* X, Register* Y){
     uint16_t sum = (uint16_t)X->GetByte(0) - (uint16_t)Y->GetByte(0);
     sum+=(uint16_t)(this->F->GetByte(0)&0x10)!=0 ? 1 : 0;
-    this.FlagHelper(sum, 1);
+    this->FlagHelper(sum, 1);
     if(sum > 255)
         this->F->SetHex(0, 0x1);
     X->SetByte(0, (uint8_t)sum & 0x00FF);
@@ -453,9 +457,9 @@ void Processor::SBC(Register* X, Register* Y){
 }
 
 void Processor::SBC(Register* X, uint8_t n){
-    uint16_t sum = (uint16_t)X->GetByte(0) - (uint16_t)Y->GetByte(0);
+    uint16_t sum = (uint16_t)X->GetByte(0) - n;
     sum+=(uint16_t)(this->F->GetByte(0)&0x10)!=0 ? 1 : 0;
-    this.FlagHelper(sum, 1);
+    this->FlagHelper(sum, 1);
     if(sum > 255)
         this->F->SetHex(0, 0x1);
     X->SetByte(0, (uint8_t)sum & 0x00FF);
@@ -469,7 +473,7 @@ void Processor::SBC(Register* X, Register* H, Register* L){
     uint16_t sum = X->GetByte(0);
     sum -= this->memory->GetByte(temp);
     sum+=(uint16_t)(this->F->GetByte(0)&0x10)!=0 ? 1 : 0;
-    this.FlagHelper(sum, 0);
+    this->FlagHelper(sum, 0);
     if(sum > 255)
         this->F->SetHex(0, 0x1);
     X->SetByte(0, (uint8_t)sum & 0x00FF);
@@ -526,25 +530,22 @@ void Processor::CP(){
 }
 
 void Processor::INC(Register* X){
-    this.ADD(X, 1);
+    this->ADD(X, (uint8_t)1);
 }
 
 void Processor::INC(Register* X, Register* Y){
 
 }
 
-void Processor::INC(Register* H, Register* L){
-}
-
 void Processor::DEC(Register* X){
-    this.SUB(X, 1);
+    this->SUB(X, 1);
 }
 
 void Processor::DEC(Register* X, Register* Y){
     Y->SetByte(0, Y->GetByte(0)+1);
-    if(Y->GetByte(0)==0)
+    if(Y->GetByte(0) == 0)
         X->SetByte(0, X->GetByte(0)+1);
-    if((X->GetByte(0)==0)&(Y->GetByte(0)==0=)
+    if((X->GetByte(0) == 0)&(Y->GetByte(0) == 0))
         this->F->SetByte(0, 0x10);
 }
 
@@ -695,6 +696,6 @@ void Processor::EI(){
 void Processor::FlagHelper(uint16_t n, int as){
     this->F->SetByte(0, 0x0);
     if(!(n&255))
-        this->F->SetByte(0, this->F->GetByte(0)|=128);
-    this->F->SetByte(0, this->F->GetByte(0)|= as ? 0x40 : 0);
+        this->F->SetByte(0, this->F->GetByte(0) | 128);
+    this->F->SetByte(0, this->F->GetByte(0) | as ? 0x40 : 0);
 }

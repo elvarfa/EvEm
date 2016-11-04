@@ -2,35 +2,29 @@
 #define MEMORY_H
 
 #include "Definitions.h"
+#include "GPU.h"
 
 class Memory
 {
     private:
+        GPU* gpu;
+        bool inBIOS;
         uint8_t storage[65535];
     public:
-        Memory();
+        Memory(GPU* gpu);
         virtual ~Memory();
 
-        inline uint8_t GetByte(uint16_t index)
+        inline void SetBIOS(bool on)
         {
-            return storage[index];
+            inBIOS = on;
         };
 
-        inline uint16_t GetWord(uint16_t index)
-        {
-            return (((uint16_t)storage[index]) << 8) | storage[index + 1];
-        };
-
-        inline void SetByte(uint16_t index, uint8_t value)
-        {
-            storage[index] = value;
-        };
-
-        inline void SetWord(uint16_t index, uint16_t value)
-        {
-            storage[index] = ((uint8_t)value);
-            storage[index + 1] = ((uint8_t)(value >> 8));
-        };
+        uint8_t GetByte(uint16_t index);
+        uint16_t GetWord(uint16_t index);
+        void SetByte(uint16_t index, uint8_t value);
+        void SetWord(uint16_t index, uint16_t value);
+    private:
+        uint16_t Indexer(uint16_t index);
 };
 
 #endif // MEMORY_H
