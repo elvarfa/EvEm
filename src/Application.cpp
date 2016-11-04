@@ -40,6 +40,7 @@ void Application::Loop()
     while (p->IsRunning() || !glfwWindowShouldClose(window))
     {
         Frame();
+        this->g->Render();
         glClear(GL_COLOR_BUFFER_BIT);
 
         glBegin(GL_TRIANGLES);
@@ -55,12 +56,12 @@ void Application::Loop()
 
 void Application::Frame()
 {
-    unsigned int fclk = p->tClock + 70224;
+    unsigned int fclk = this->p->tTotal + 70224;
     do
     {
-        p->ProcessOpcode(p->FetchInstruction());
-        p->Render();
-    } while(p->tClock < fclk);
+        this->p->ProcessOpcode(this->p->FetchInstruction());
+        this->p->Render();
+    } while(this->p->tTotal < fclk);
 }
 
 int main(void)

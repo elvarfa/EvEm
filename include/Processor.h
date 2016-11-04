@@ -26,8 +26,8 @@ public:
     Register* M = new Register(1);
     Register* T = new Register(1);
 
+    unsigned int mTotal, tTotal;
 private:
-    unsigned int m, t;
     std::unordered_map<uint8_t, std::function<void(Processor* p, unsigned int* m, unsigned int* t)>>* operations;
 
     Memory* memory;
@@ -81,6 +81,9 @@ public:
             register at the address in the range 0xFF00-0xFFFF specified by register X.
             Loads r <-- ($FF00+X).*/
             void Load(Register* r, Register* X);
+
+            void Load(Register* X, Register* Y, uint16_t nn);
+            void Load(Register* r, Register* X, Register* Y);
 
             /*Loads into register r the contents of memory specified by the contents of
             register pair xy, simultaneously incrememnt the contents of HL.*/
@@ -160,7 +163,7 @@ public:
         /*From Registers*/
 
             // Load the contents of register pair HL(not the memory location) in stack pointer SP.
-			void Load(Register* X, Register* Y, Register* SP);
+			void Load_HL(Register* X, Register* Y, Register* SP);
 
     /*Not sure how to classify push and pop....*/
 
@@ -192,17 +195,17 @@ public:
         void ADD(Register* SP, int8_t n);
         void ADDHL(Register* X, Register* H, Register* L);
 
-        void ADC(Register* X);
-        void ADC(uint8_t n);
-        void ADC();
+        void ADC(Register* X, Register* H, Register* L);
+        void ADC(Register* X, Register* Y);
+        void ADC(Register* X, uint8_t n);
 
         void SUB(Register* X, Register* Y);
         void SUB(Register* X, uint8_t n);
         void SUB(Register* A, Register* H, Register* L);
 
-        void SBC(Register* X);
-        void SBC(uint8_t n);
-        void SBC();
+        void SBC(Register* X, Register* H, Register* L);
+        void SBC(Register* X, Register* Y);
+        void SBC(Register* X, uint8_t n);
 
         void AND(Register* X);
         void AND(uint8_t n);
