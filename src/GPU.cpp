@@ -53,7 +53,7 @@ uint8_t GPU::GetVram(uint16_t addr)
             return this->scy->GetByte(0);
         case 0xFF43:
             return this->scx->GetByte(0);
-        case 0xFF44:
+        default:
             return line;
     }
 }
@@ -63,10 +63,10 @@ void GPU::SetVram(uint16_t addr, uint8_t value)
     switch (addr)
     {
         case 0xFF40:
-            this->switchBG = value & 0x01 != 0;
-            this->bgMap = value & 0x08 != 0;
-            this->bgTile = value & 0x10 != 0;
-            this->switchLCD = value & 0x85 != 0;
+            this->switchBG = (value & 0x01) != 0;
+            this->bgMap = (value & 0x08) != 0;
+            this->bgTile = (value & 0x10) != 0;
+            this->switchLCD = (value & 0x85) != 0;
             break;
         case 0xFF42:
             this->scy->SetByte(0, value);
@@ -86,6 +86,11 @@ void GPU::SetVram(uint16_t addr, uint8_t value)
             }
             break;
     }
+}
+
+void GPU::Render()
+{
+    this->screen->Render();
 }
 
 void GPU::Reset()

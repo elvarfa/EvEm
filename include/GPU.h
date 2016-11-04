@@ -25,6 +25,7 @@ class GPU
         void UpdateTile(uint16_t addr);
         void Reset();
         void Step(unsigned int clock);
+        void Render();
     private:
         void Scanline();
 };
