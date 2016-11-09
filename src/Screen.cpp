@@ -57,8 +57,17 @@ Screen::Screen(int width, int height)
 
     GLint linked;
     glGetProgramiv(this->program, GL_LINK_STATUS, &linked);
-    if (!linked)
-       throw "Program failed to link.";
+    if (linked != GLEW_OK)
+    {
+        GLint elength;
+        glGetProgramiv(this->program, GL_INFO_LOG_LENGTH , &elength);
+
+        GLsizei esize;
+        GLchar* compiler_log = (GLchar*)malloc(elength);
+        glGetProgramInfoLog(this->program, elength, &esize, compiler_log);
+        std::string error = std::string("Shader failed to compile with error:\n") + compiler_log;
+        throw -1;
+    }
 }
 
 Screen::~Screen()

@@ -664,6 +664,17 @@ void Processor::RLC(Register* X){
 }
 
 void Processor::RLCHL(){
+    uint16_t HL = this->H->GetByte(0) << 8;
+    HL += this->L->GetByte(0);
+    uint8_t ci = this->F->GetByte(0)&0x80 ? 1 : 0;
+    uint8_t co = HL&0x80 ? 0x10 : 0;
+    uint16_t HLtemp = (HL << 1)+ci;
+    HLtemp&=255;
+    this->FlagHelper(HLtemp, 0);
+    this->memory->SetByte(HL, (uint8_t)HLtemp);
+    this->F->SetByte(0, (this->F->GetByte(0)&0xEF)+co);
+    this->M->SetByte(0, 0x04);
+    this->T->SetByte(0, 0x16);
 }
 
 void Processor::RLA(){
@@ -691,13 +702,14 @@ void Processor::RLHL(){
     uint16_t HL = this->H->GetByte(0) << 8;
     HL += this->L->GetByte(0);
     uint8_t ci = this->F->GetByte(0)&0x10 ? 1 : 0;
-    //uint8_t co = X->GetByte(0)&0x80 ? 1 : 0;
-    //X->SetByte(0, (X->GetByte(0) << 1)+ci);
-    //X->SetByte(0, X->GetByte(0)&255);
-    //this->FlagHelper((uint16_t)X->GetByte(0), 0);
-    //this->F->SetByte(0, (this->F->GetByte(0)&0xEF)+co);
-    this->M->SetByte(0, 0x02);
-    this->T->SetByte(0, 0x08);
+    uint8_t co = HL&0x80 ? 0x10 : 0;
+    uint16_t HLtemp = (HL << 1)+ci;
+    HLtemp&=255;
+    this->FlagHelper(HLtemp, 0);
+    this->memory->SetByte(HL, (uint8_t)HLtemp);
+    this->F->SetByte(0, (this->F->GetByte(0)&0xEF)+co);
+    this->M->SetByte(0, 0x04);
+    this->T->SetByte(0, 0x16);
 }
 
 void Processor::RRCA(){
@@ -722,7 +734,17 @@ void Processor::RRC(Register* X){
 }
 
 void Processor::RRCHL(){
-
+    uint16_t HL = this->H->GetByte(0) << 8;
+    HL += this->L->GetByte(0);
+    uint8_t ci = this->F->GetByte(0)&1 ? 0x80 : 0;
+    uint8_t co = HL&1 ? 0x10 : 0;
+    uint16_t HLtemp = (HL >> 1)+ci;
+    HLtemp&=255;
+    this->FlagHelper(HLtemp, 0);
+    this->memory->SetByte(HL, (uint8_t)HLtemp);
+    this->F->SetByte(0, (this->F->GetByte(0)&0xEF)+co);
+    this->M->SetByte(0, 0x04);
+    this->T->SetByte(0, 0x16);
 }
 
 void Processor::RRA(){
@@ -747,7 +769,17 @@ void Processor::RR(Register* X){
 }
 
 void Processor::RRHL(){
-
+    uint16_t HL = this->H->GetByte(0) << 8;
+    HL += this->L->GetByte(0);
+    uint8_t ci = this->F->GetByte(0)&1 ? 0x10 : 0;
+    uint8_t co = HL&0x10 ? 0x80 : 0;
+    uint16_t HLtemp = (HL >> 1)+ci;
+    HLtemp&=255;
+    this->FlagHelper(HLtemp, 0);
+    this->memory->SetByte(HL, (uint8_t)HLtemp);
+    this->F->SetByte(0, (this->F->GetByte(0)&0xEF)+co);
+    this->M->SetByte(0, 0x04);
+    this->T->SetByte(0, 0x16);
 }
 
 void Processor::SLA(Register* X){
